@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Linq;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
@@ -12,17 +11,17 @@ namespace spllchck
 
         private Dictionary<string, int> dictionary;
 
-        public SpllChcker(string path)
+        public SpllChcker(string words)
         {
-            var source = File.ReadAllText(path).ToLower();
-
-            this.dictionary = Regex.Matches(source, "[a-z]+")
+            this.dictionary = Regex.Matches(words.ToLower(), "[a-z]+")
                                    .GroupBy(m => m.Value)
                                    .ToDictionary(g => g.Key, g => g.Count());
         }
 
         public string Check(string word)
         {
+            if (string.IsNullOrWhiteSpace(word)) return word;
+
             if (this.dictionary.ContainsKey(word)) return word;
 
             var edits = GetEditsOf(word);

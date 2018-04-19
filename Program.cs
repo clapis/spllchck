@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 
 namespace spllchck
@@ -7,9 +8,21 @@ namespace spllchck
     {
         static void Main(string[] args)
         {
-            var spllchcker = new SpllChcker("words.txt");
+            if (args.Length != 1) {
+                Console.WriteLine("Error: A single words file must be specified.");
+                return;
+            }
 
-            Console.WriteLine(spllchcker.Check("anwyheer") ?? "404");
+            var words = File.ReadAllText(args[0]);
+
+            var spllchcker = new SpllChcker(words);
+
+            while(true) {
+                Console.Write("# ");
+                var word = Console.ReadLine().ToLower();
+                if (string.IsNullOrWhiteSpace(word)) break;
+                Console.WriteLine(spllchcker.Check(word) ?? word);
+            }
         }
     }
 }
